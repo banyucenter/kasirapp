@@ -7,6 +7,21 @@ var logger = require('morgan');
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 
+//Buat route pada app.js
+var routes = require('./routes/index');
+var users = require('./routes/users');
+var produk = require('./routes/produk');
+
+//load mongoose
+var mongoose = require('mongoose');
+
+mongoose.Promise = global.Promise;
+
+//hubungkan ke Mongodb
+mongoose.connect('mongodb://localhost/kasirapp')
+  .then(() => console.log('Berhasil terhubung dengan MongoDB'))
+  .catch((err) => console.error(err));
+
 var app = express();
 
 // view engine setup
@@ -19,8 +34,10 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', indexRouter);
-app.use('/users', usersRouter);
+//pasang routes
+app.use('/', routes);
+app.use('/users', users);
+app.use('/produk', produk);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
